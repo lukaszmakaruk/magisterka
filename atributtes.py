@@ -543,7 +543,7 @@ def get_team_blue(image):
 
 def get_team_red(image):
     img = image[:20, 825:867]
-    resized = resize(img, 130)
+    resized = resize(img, 125)
     gray_scaled = get_gray_scale(resized)
     sharpen = unsharp_mask(gray_scaled)
     text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
@@ -658,81 +658,84 @@ def get_minions_diff_supp_blue(image):
         diff = None
     return diff
 
-print(f"Czas stratu: {datetime.now().strftime('%H:%M:%S')}")
+testujemy= False
 
-czaslista=[]
-zlotolista=[]
-wiezelista=[]
-killelista=[]
-team_bluelista=[]
-team_redlista=[]
-kda_toplista=[]
-kda_junglelista=[]
-kda_midlista=[]
-kda_adclista=[]
-kda_supplista=[]
-minions_toplista=[]
-minions_junglelista=[]
-minions_midlista=[]
-minions_adclista=[]
-minions_supplista=[]
+if testujemy:
+    print(f"Czas stratu: {datetime.now().strftime('%H:%M:%S')}")
 
-for filename in os.listdir('mecze'):
-    f = os.path.join('mecze', filename)
-    # checking if it is a file
-    if os.path.isfile(f):
-        frame = cv2.imread(f)
-        czas = get_time(frame)
-        czaslista.append(czas)
-        zloto = get_gold_diff_blue(frame)
-        zlotolista.append(zloto)
-        wieze = get_tower_diff_blue(frame)
-        wiezelista.append(wieze)
-        kille = get_kills_diff_blue(frame)
-        killelista.append(kille)
-        team_blue = get_team_blue(frame)
-        team_bluelista.append(team_blue)
-        team_red = get_team_red(frame)
-        team_redlista.append(team_red)
-        kda_top = get_kda_diff_top_blue(frame)
-        kda_toplista.append(kda_top)
-        kda_jungle = get_kda_diff_jungle_blue(frame)
-        kda_junglelista.append(kda_jungle)
-        kda_mid = get_kda_diff_mid_blue(frame)
-        kda_midlista.append(kda_mid)
-        kda_adc = get_kda_diff_adc_blue(frame)
-        kda_adclista.append(kda_adc)
-        kda_supp = get_kda_diff_supp_blue(frame)
-        kda_supplista.append(kda_supp)
-        minions_top = get_minions_diff_top_blue(frame)
-        minions_toplista.append(minions_top)
-        minions_jungle = get_minions_diff_jungle_blue(frame)
-        minions_junglelista.append(minions_jungle)
-        minions_mid = get_minions_diff_mid_blue(frame)
-        minions_midlista.append(minions_mid)
-        minions_adc = get_minions_diff_adc_blue(frame)
-        minions_adclista.append(minions_adc)
-        minions_supp = get_minions_diff_supp_blue(frame)
-        minions_supplista.append(minions_supp)
+    czaslista=[]
+    zlotolista=[]
+    wiezelista=[]
+    killelista=[]
+    team_bluelista=[]
+    team_redlista=[]
+    kda_toplista=[]
+    kda_junglelista=[]
+    kda_midlista=[]
+    kda_adclista=[]
+    kda_supplista=[]
+    minions_toplista=[]
+    minions_junglelista=[]
+    minions_midlista=[]
+    minions_adclista=[]
+    minions_supplista=[]
 
-df_data={'time': czaslista,
-         'gold': zlotolista,
-         'towers': wiezelista,
-         'kills': killelista,
-         'blue_team': team_bluelista,
-         'red_team': team_redlista,
-         'kda_top': kda_toplista,
-         'kda_jungle': kda_junglelista,
-         'kda_mid': kda_midlista,
-         'kda_adc': kda_adclista,
-         'kda_supp': kda_supplista,
-         'minions_top': minions_toplista,
-         'minions_jungle': minions_junglelista,
-         'minions_mid': minions_midlista,
-         'minions_adc': minions_adclista,
-         'minions_supp': minions_supplista}
+    for filename in os.listdir('mecze'):
+        f = os.path.join('mecze', filename)
+        # checking if it is a file
+        if os.path.isfile(f):
+            frame = cv2.imread(f)
+            czas = get_time(frame)
+            czaslista.append(czas)
+            zloto = get_gold_diff_blue(frame)
+            zlotolista.append(zloto)
+            wieze = get_tower_diff_blue(frame)
+            wiezelista.append(wieze)
+            kille = get_kills_diff_blue(frame)
+            killelista.append(kille)
+            team_blue = get_team_blue(frame)
+            team_bluelista.append(team_blue)
+            team_red = get_team_red(frame)
+            team_redlista.append(team_red)
+            kda_top = get_kda_diff_top_blue(frame)
+            kda_toplista.append(kda_top)
+            kda_jungle = get_kda_diff_jungle_blue(frame)
+            kda_junglelista.append(kda_jungle)
+            kda_mid = get_kda_diff_mid_blue(frame)
+            kda_midlista.append(kda_mid)
+            kda_adc = get_kda_diff_adc_blue(frame)
+            kda_adclista.append(kda_adc)
+            kda_supp = get_kda_diff_supp_blue(frame)
+            kda_supplista.append(kda_supp)
+            minions_top = get_minions_diff_top_blue(frame)
+            minions_toplista.append(minions_top)
+            minions_jungle = get_minions_diff_jungle_blue(frame)
+            minions_junglelista.append(minions_jungle)
+            minions_mid = get_minions_diff_mid_blue(frame)
+            minions_midlista.append(minions_mid)
+            minions_adc = get_minions_diff_adc_blue(frame)
+            minions_adclista.append(minions_adc)
+            minions_supp = get_minions_diff_supp_blue(frame)
+            minions_supplista.append(minions_supp)
 
-df= pd.DataFrame(df_data)
+    df_data={'time': czaslista,
+             'gold': zlotolista,
+             'towers': wiezelista,
+             'kills': killelista,
+             'blue_team': team_bluelista,
+             'red_team': team_redlista,
+             'kda_top': kda_toplista,
+             'kda_jungle': kda_junglelista,
+             'kda_mid': kda_midlista,
+             'kda_adc': kda_adclista,
+             'kda_supp': kda_supplista,
+             'minions_top': minions_toplista,
+             'minions_jungle': minions_junglelista,
+             'minions_mid': minions_midlista,
+             'minions_adc': minions_adclista,
+             'minions_supp': minions_supplista}
 
-print(f"Czas końca: {datetime.now().strftime('%H:%M:%S')}")
-df.to_csv('test.csv',index=False)
+    df= pd.DataFrame(df_data)
+
+    print(f"Czas końca: {datetime.now().strftime('%H:%M:%S')}")
+    df.to_csv('test.csv',index=False)
