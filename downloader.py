@@ -7,8 +7,27 @@ import numpy as np
 import math
 
 save_path = 'D:/Python/magisterka/filmy'
-link = 'https://www.youtube.com/watch?v=O7mNMvMT4Cs'
+#link = 'https://www.youtube.com/watch?v=O7mNMvMT4Cs'
 link2= 'https://www.youtube.com/watch?v=gU0R6i02QOE'
+
+film_list=[
+    'https://www.youtube.com/watch?v=pzEobUPOOBQ',
+    'https://www.youtube.com/watch?v=U4RP5sNpBj4',
+    'https://www.youtube.com/watch?v=cZmkkdlOfq8&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=22',
+    'https://www.youtube.com/watch?v=b2zqH-CHHCg&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=21',
+    'https://www.youtube.com/watch?v=FETzwfZQHSA&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=20',
+    'https://www.youtube.com/watch?v=KpE-UzyhqHQ&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=19',
+    'https://www.youtube.com/watch?v=qEiWF1n43t4&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=18',
+    'https://www.youtube.com/watch?v=34M59i83yPI&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=17',
+    'https://www.youtube.com/watch?v=eIXAz1qrseY&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=16',
+    'https://www.youtube.com/watch?v=wofP8F0lf-U&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=15',
+    'https://www.youtube.com/watch?v=Bd92djyY9_Q&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=14',
+    'https://www.youtube.com/watch?v=-mdCVi4seLE&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=13',
+    'https://www.youtube.com/watch?v=SYqbKUTN3F0&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=12',
+    'https://www.youtube.com/watch?v=WVUABITOKRg&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=11',
+    'https://www.youtube.com/watch?v=gU0R6i02QOE&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=10',
+    'https://www.youtube.com/watch?v=dFHKsnDdFHU&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=9'
+]
 
 # POBIERANIE
 def downloader(link,save_path):
@@ -18,8 +37,33 @@ def downloader(link,save_path):
     ys.download(save_path)
     print(f'Koniec: {datetime.now().strftime("%H:%M:%S")}')
 
+from pytube import YouTube
+
+from pytube import YouTube
+
+import youtube_dl
+
+import youtube_dl
+
+def download_720p_stream_from_youtube(link, path):
+    try:
+        ydl_opts = {
+            'format': 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]',
+            'outtmpl': path + '/%(title)s.%(ext)s',
+            'ignoreerrors': True
+        }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([link])
+    except Exception as e:
+        print("Wystąpił błąd: ", e)
+
+#for film in film_list:
+ #   downloader(film,save_path)
+
+#download_720p_stream_from_youtube(link2,save_path)
+
 # ZMIANA NA KLATKI
-def video_to_images(video_path, frames_per_second=0.02):
+def video_to_images(video_path, frames_per_second=0.02,number=1):
     cam = cv2.VideoCapture(video_path)
     frame_list = []
     frame_rate = cam.get(cv2.CAP_PROP_FPS)  # video frame rate
@@ -43,7 +87,7 @@ def video_to_images(video_path, frames_per_second=0.02):
         if ret:
 
             # if video is still left continue creating images
-            file_name = f'{images_path}/frame' + str(current_frame) + '.jpg'
+            file_name = f'{images_path}/frame' + str(current_frame) +'_' +str(number)+ '.jpg'
             print('Creating...' + file_name)
             # print('frame rate', frame_rate)
             if current_frame % (math.floor(frame_rate / frames_per_second)) == 0:
@@ -116,13 +160,16 @@ test=True
 
 #Zmienianie filmow na klatki
 if test == 'kot':
+    print(f'Start: {datetime.now().strftime("%H:%M:%S")}')
+    i = 0
     for filename in os.listdir('filmy'):
         f = os.path.join('filmy', filename)
         # checking if it is a file
         if os.path.isfile(f):
-            video_to_images(f)
+            video_to_images(f,number=i)
             pass
-
+        i=i+1
+    print(f'Koniec: {datetime.now().strftime("%H:%M:%S")}')
 #Wybieranie filmów których klatki są z meczu
 
 if test==True:
