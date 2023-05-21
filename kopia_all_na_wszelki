@@ -1,0 +1,615 @@
+def get_gold_blue(image):
+    img = image[:35, 547:583]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    text = text.strip()
+    try:
+        if text[-1] == 'k':
+            text = int(float(text[:-1]) * 1000)
+            if text > 100000:
+                text = int(str(text)[:-1])
+    except:
+        text = None
+    return text
+
+
+def get_gold_red(image):
+    img = image[:35, 727:770]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    text = text.strip()
+    try:
+        if text[-1] == 'k':
+            text = int(float(text[:-1]) * 1000)
+            if abs(get_gold_blue(image) - text) >= 20000:
+                text = int(str(text)[:-1])
+    except:
+        text = None
+    return text
+
+# towers
+
+
+def get_tower_blue(image):
+    img = image[:35, 485:520]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_tower_red(image):
+    img = image[:35, 792:820]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+# kills
+
+
+def get_kills_blue(image):
+    img = image[:35, 590:630]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_kills_red(image):
+    img = image[:35, 650:690]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+# kda
+
+
+def get_kda_top_blue(image):
+    img = image[560:585, 540:580]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0])+int(text[2]))/int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_top_red(image):
+    img = image[565:585, 705:750]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_jungle_blue(image):
+    img = image[590:620, 544:580]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if len(text) < 3 and int(text[0]) > 10:
+            text = [text[0][0], text[0][1], text[1]]
+        if len(text) < 3 and int(text[1]) > 10:
+            text = [text[0], text[1][0], text[1][1:]]
+        if len(text[1]) > 1 and text[1][0] == 0:
+            text = [text[0], text[1][0], text[1][1]]
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_jungle_red(image):
+    img = image[595:615, 710:745]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if len(text) < 3 and int(text[0]) > 10:
+            text = [text[0][0], text[0][1], text[1]]
+        if len(text) < 3 and int(text[1]) > 10:
+            text = [text[0], text[1][0], text[1][1:]]
+        if len(text[1]) > 1 and text[1][0] == 0:
+            text = [text[0], text[1][0], text[1][1]]
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_mid_blue(image):
+    img = image[630:648, 537:580]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if len(text) < 3 and int(text[0]) > 18:
+            text = [text[0][0], text[0][1], text[1]]
+        if len(text) < 3 and int(text[1]) > 30:
+            text = [text[0], text[1][0], text[1][1:]]
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_mid_red(image):
+    img = image[627:650, 710:750]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if len(text) < 3 and int(text[0]) > 18:
+            text = [text[0][0], text[0][1], text[1]]
+        if len(text) < 3 and int(text[1]) > 30:
+            text = [text[0], text[1][0], text[1][1:]]
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_adc_blue(image):
+    img = image[662:680, 535:580]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_adc_red(image):
+    img = image[662:680, 710:750]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_supp_blue(image):
+    img = image[690:710, 540:580]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+
+def get_kda_supp_red(image):
+    img = image[690:710, 710:750]
+    img = resize(img, 120)
+    img = get_gray_scale(img)
+    img = unsharp_mask(img)
+    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+    try:
+        text = text.strip().split('/')
+        if int(text[1]) != 0:
+            text = (int(text[0]) + int(text[2])) / int(text[1])
+        else:
+            text = int(text[0]) + int(text[2])
+    except:
+        text = None
+    return text
+
+# minions
+
+
+def get_minions_top_blue(image):
+    img = image[568:585, 575:610]
+    gray_scaled = get_gray_scale(img)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text=int(text)
+    except:
+        text=None
+    return text
+
+
+def get_minions_top_red(image):
+    img = image[565:585, 680:710]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text=int(text)
+    except:
+        text=None
+    return text
+
+
+def get_minions_jungle_blue(image):
+    img = image[595:615, 575:610]
+    resized = resize(img, 110)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_jungle_red(image):
+    img = image[595:615, 680:710]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_mid_blue(image):
+    img = image[630:650, 575:610]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_mid_red(image):
+    img = image[630:650, 680:710]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_adc_blue(image):
+    img = image[662:680, 575:610]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_adc_red(image):
+    img = image[662:680, 680:710]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_supp_blue(image):
+    img = image[691:708, 575:610]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+def get_minions_supp_red(image):
+    img = image[691:710, 680:710]
+    resized = resize(img, 120)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    try:
+        text = int(text)
+    except:
+        text = None
+    return text
+
+
+# ATTRIBUTES MAIN
+
+# time
+def get_time(image):
+    config = r'--psm 7'
+    img = image[32:56, 610:665]
+    img1 = resize(img, 150)
+    img2 = get_gray_scale(img1)
+    img3 = unsharp_mask(img2)
+    text = pytesseract.image_to_string(img3, config=config)
+    try:
+        text2 = datetime.strptime(text.strip(), '%M:%S').time()
+    except:
+        text2 = None
+    return text2
+
+# gold
+
+
+def get_gold_diff_blue(image):
+    try:
+        diff = get_gold_blue(image) - get_gold_red(image)
+    except:
+        diff = None
+    return diff
+
+# towers
+
+def get_tower_diff_blue(image):
+    try:
+        diff = get_tower_blue(image) - get_tower_red(image)
+        if diff>14:
+            diff=None
+    except:
+        diff = None
+    return diff
+
+# kills
+
+
+def get_kills_diff_blue(image):
+    try:
+        diff = get_kills_blue(image) - get_kills_red(image)
+        if diff>14:
+            diff=None
+    except:
+        diff = None
+    return diff
+
+# teams
+
+
+def get_team_blue(image):
+    img = image[:20, 417:450]
+    resized = resize(img, 130)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    text = text.strip().upper()
+    if text == 'VIT':
+        text = 'Team Vitality'
+    elif text == 'MAD':
+        text = 'Mad Lions'
+    elif text == 'SK':
+        text = 'SK Gaming'
+    elif text == 'G2':
+        text = 'G2 Esports'
+    elif text == 'RGE':
+        text = 'Rogue'
+    elif text == 'FNC':
+        text = 'Fnatic'
+    elif text == 'MSF':
+        text = 'Misfits Gaming'
+    elif text == 'XL':
+        text = 'Excel Esports'
+    elif text == 'BDS':
+        text = 'Team BDS'
+    elif text == 'AST':
+        text = 'Astralis'
+    elif text == 'SO4' or text == 'S04':
+        text = 'FC Schalke 04'
+    else:
+        text = None
+    return text
+
+
+def get_team_red(image):
+    img = image[:20, 825:867]
+    resized = resize(img, 125)
+    gray_scaled = get_gray_scale(resized)
+    sharpen = unsharp_mask(gray_scaled)
+    text = pytesseract.image_to_string(sharpen, config=r'--psm 7')
+    text = text.strip().upper()
+    if text == 'VIT':
+        text = 'Team Vitality'
+    elif text == 'MAD':
+        text = 'Mad Lions'
+    elif text == 'SK':
+        text = 'SK Gaming'
+    elif text == 'G2':
+        text = 'G2 Esports'
+    elif text == 'RGE':
+        text = 'Rogue'
+    elif text == 'FNC':
+        text = 'Fnatic'
+    elif text == 'MSF':
+        text = 'Misfits Gaming'
+    elif text == 'XL':
+        text = 'Excel Esports'
+    elif text == 'BDS':
+        text = 'Team BDS'
+    elif text == 'AST':
+        text = 'Astralis'
+    elif text == 'SO4' or text == 'S04':
+        text = 'FC Schalke 04'
+    else:
+        text = None
+    return text
+
+# kda
+
+
+def get_kda_diff_top_blue(image):
+    try:
+        diff = get_kda_top_blue(image) - get_kda_top_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_kda_diff_jungle_blue(image):
+    try:
+        diff = get_kda_jungle_blue(image) - get_kda_jungle_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_kda_diff_mid_blue(image):
+    try:
+        diff = get_kda_mid_blue(image) - get_kda_mid_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_kda_diff_adc_blue(image):
+    try:
+        diff = get_kda_adc_blue(image) - get_kda_adc_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_kda_diff_supp_blue(image):
+    try:
+        diff = get_kda_supp_blue(image) - get_kda_supp_red(image)
+    except:
+        diff = None
+    return diff
+
+# minions
+
+
+def get_minions_diff_top_blue(image):
+    try:
+        diff = get_minions_top_blue(image) - get_minions_top_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_minions_diff_jungle_blue(image):
+    try:
+        diff = get_minions_jungle_blue(image) - get_minions_jungle_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_minions_diff_mid_blue(image):
+    try:
+        diff = get_minions_mid_blue(image) - get_minions_mid_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_minions_diff_adc_blue(image):
+    try:
+        diff = get_minions_adc_blue(image) - get_minions_adc_red(image)
+    except:
+        diff = None
+    return diff
+
+
+def get_minions_diff_supp_blue(image):
+    try:
+        diff = get_minions_supp_blue(image) - get_minions_supp_red(image)
+    except:
+        diff = None
+    return diff
