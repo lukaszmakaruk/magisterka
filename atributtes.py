@@ -8,7 +8,7 @@ import math
 from colorthief import ColorThief
 import pandas as pd
 import pickle
-from image_similarity_measures.quality_metrics import rmse, psnr, uiq,sam,sre
+from image_similarity_measures.quality_metrics import rmse, psnr, uiq, sam, sre
 from skimage.metrics import structural_similarity as ssim
 from PIL import Image
 
@@ -59,6 +59,7 @@ def unsharp_mask(image, kernel_size=(5, 5), sigma=1.0, amount=1.0, threshold=0):
         np.copyto(sharpened, image, where=low_contrast_mask)
     return sharpened
 
+
 def mse_calc(img1, img2):
     error = np.sum((img1.astype('float') - img2.astype('float')) ** 2)
     error /= float(img1.shape[0] * img1.shape[1])
@@ -69,7 +70,7 @@ custom_config = r'--oem 3 --psm 6'
 custom_config2 = r'--psm 13 --oem 3 -c tessedit_char_whitelist=0123456789:'
 
 
-# ATTRIBUTES LOW
+# ATRYBUTY WYSOKOPOZIOMOWE
 # gold
 def get_gold_blue(image):
     img = image[:35, 540:590]
@@ -83,20 +84,20 @@ def get_gold_blue(image):
     except:
         text = None
     try:
-        if text>100000:
+        if text > 100000:
             raise
     except:
         img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        img = img.crop((547,0,590,35))
-        skala= 1000/100
-        img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+        img = img.crop((547, 0, 590, 35))
+        skala = 1000 / 100
+        img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
         img = img.convert('L')
-        text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+        text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
         text = text.strip()
-        if int(float(text[:-1]) * 1000)>100000:
-            text=int(text[:-1])*100
+        if int(float(text[:-1]) * 1000) > 100000:
+            text = int(text[:-1]) * 100
         else:
-            text=int(float(text[:-1]) * 1000)
+            text = int(float(text[:-1]) * 1000)
     return text
 
 
@@ -112,21 +113,22 @@ def get_gold_red(image):
     except:
         text = None
     try:
-        if text>100000:
+        if text > 100000:
             raise
     except:
         img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        img = img.crop((730,0,780,35))
-        skala= 600/100
-        img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+        img = img.crop((730, 0, 780, 35))
+        skala = 600 / 100
+        img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
         img = img.convert('L')
-        text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+        text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
         text = text.strip()
-        if int(float(text[:-1]) * 1000)>100000:
-            text=int(text[:-1])*100
+        if int(float(text[:-1]) * 1000) > 100000:
+            text = int(text[:-1]) * 100
         else:
-            text=int(float(text[:-1]) * 1000)
+            text = int(float(text[:-1]) * 1000)
     return text
+
 
 # towers
 
@@ -142,14 +144,14 @@ def get_tower_blue(image):
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((485,0,510,35))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((485, 0, 510, 35))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
-            text=int(text)
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = int(text)
         except:
-            text=None
+            text = None
     return text
 
 
@@ -164,15 +166,16 @@ def get_tower_red(image):
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((795,0,810,35))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((795, 0, 810, 35))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
-            text=int(text)
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+            text = int(text)
         except:
-            text=None
+            text = None
     return text
+
 
 # kills
 
@@ -188,16 +191,17 @@ def get_kills_blue(image):
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((590,0,630,35))
-            skala= 120/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((590, 0, 630, 35))
+            skala = 120 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
             text = text.strip()
-            text=int(text)
+            text = int(text)
         except:
-            text=None
+            text = None
     return text
+
 
 def get_kills_red(image):
     img = image[:35, 650:690]
@@ -210,16 +214,17 @@ def get_kills_red(image):
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((650,0,690,35))
-            skala= 120/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((650, 0, 690, 35))
+            skala = 120 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
             text = text.strip()
-            text=int(text)
+            text = int(text)
         except:
-            text=None
+            text = None
     return text
+
 
 # kda
 
@@ -232,36 +237,36 @@ def get_kda_top_blue(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((540,565,580,590))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((540, 565, 580, 590))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((540,565,580,590))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((540, 565, 580, 590))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -277,36 +282,36 @@ def get_kda_top_red(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((705,565,750,590))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((705, 565, 750, 590))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((705,565,750,590))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((705, 565, 750, 590))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -322,49 +327,49 @@ def get_kda_jungle_blue(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((544,590,580,620))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((544, 590, 580, 620))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((544,590,580,590))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((544, 590, 580, 590))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
                 try:
                     img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                    img = img.crop((544,590,580,590))
-                    skala= 600/100
-                    img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                    img = img.crop((544, 590, 580, 590))
+                    skala = 600 / 100
+                    img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                     img = img.convert('L')
-                    text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                     text = text.strip().split('/')
                     if int(text[1]) != 0:
-                        text = (int(text[0])+int(text[2]))/int(text[1])
+                        text = (int(text[0]) + int(text[2])) / int(text[1])
                     else:
                         text = int(text[0]) + int(text[2])
                 except:
@@ -374,55 +379,55 @@ def get_kda_jungle_blue(image):
 
 def get_kda_jungle_red(image):
     try:
-        img = image[595:615, 710:745]             #[590:620, 544:580]
+        img = image[595:615, 710:745]  # [590:620, 544:580]
         img = resize(img, 120)
         img = get_gray_scale(img)
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((710,595,745,620))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((710, 595, 745, 620))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((710,595,745,620))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((710, 595, 745, 620))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
                 try:
                     img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                    img = img.crop((710,595,745,620))
-                    skala= 600/100
-                    img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                    img = img.crop((710, 595, 745, 620))
+                    skala = 600 / 100
+                    img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                     img = img.convert('L')
-                    text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                    text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                     text = text.strip().split('/')
                     if int(text[1]) != 0:
-                        text = (int(text[0])+int(text[2]))/int(text[1])
+                        text = (int(text[0]) + int(text[2])) / int(text[1])
                     else:
                         text = int(text[0]) + int(text[2])
                 except:
@@ -438,36 +443,36 @@ def get_kda_mid_blue(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((537,630,580,645))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((537, 630, 580, 645))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((540,630,580,645))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((540, 630, 580, 645))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -483,36 +488,36 @@ def get_kda_mid_red(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((710,630,750,645))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((710, 630, 750, 645))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((710,630,750,645))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((710, 630, 750, 645))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -528,36 +533,36 @@ def get_kda_adc_blue(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((535,662,580,680))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((535, 662, 580, 680))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((535,662,580,680))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((535, 662, 580, 680))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -573,36 +578,36 @@ def get_kda_adc_red(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((710,662,750,680))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((710, 662, 750, 680))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((710,662,750,680))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((710, 662, 750, 680))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -618,36 +623,36 @@ def get_kda_supp_blue(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((540,690,580,710))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((540, 690, 580, 710))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((540,690,580,710))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((540, 690, 580, 710))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
@@ -663,41 +668,42 @@ def get_kda_supp_red(image):
         img = unsharp_mask(img)
         text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
         text = text.strip().split('/')
-        if text[2]>20:
+        if text[2] > 20:
             raise
         if int(text[1]) != 0:
-            text = (int(text[0])+int(text[2]))/int(text[1])
+            text = (int(text[0]) + int(text[2])) / int(text[1])
         else:
             text = int(text[0]) + int(text[2])
     except:
         try:
             img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            img = img.crop((710,690,750,710))
-            skala= 340/100
-            img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+            img = img.crop((710, 690, 750, 710))
+            skala = 340 / 100
+            img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
             img = img.convert('L')
-            text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+            text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
             text = text.strip().split('/')
             if int(text[1]) != 0:
-                text = (int(text[0])+int(text[2]))/int(text[1])
+                text = (int(text[0]) + int(text[2])) / int(text[1])
             else:
                 text = int(text[0]) + int(text[2])
         except:
             try:
                 img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                img = img.crop((710,690,750,710))
-                skala= 3000/100
-                img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+                img = img.crop((710, 690, 750, 710))
+                skala = 3000 / 100
+                img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
                 img = img.convert('L')
-                text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
+                text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789/')
                 text = text.strip().split('/')
                 if int(text[1]) != 0:
-                    text = (int(text[0])+int(text[2]))/int(text[1])
+                    text = (int(text[0]) + int(text[2])) / int(text[1])
                 else:
                     text = int(text[0]) + int(text[2])
             except:
                 text = None
     return text
+
 
 # minions
 
@@ -708,9 +714,9 @@ def get_minions_top_blue(image):
     sharpen = unsharp_mask(gray_scaled)
     text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     try:
-        text=int(text)
+        text = int(text)
     except:
-        text=None
+        text = None
     return text
 
 
@@ -721,9 +727,9 @@ def get_minions_top_red(image):
     sharpen = unsharp_mask(gray_scaled)
     text = pytesseract.image_to_string(sharpen, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     try:
-        text=int(text)
+        text = int(text)
     except:
-        text=None
+        text = None
     return text
 
 
@@ -831,7 +837,7 @@ def get_minions_supp_red(image):
     return text
 
 
-# ATTRIBUTES MAIN
+# ATRYBUTY GŁÓWNE
 
 # time
 def get_time(image):
@@ -845,11 +851,11 @@ def get_time(image):
         text = datetime.strptime(text.strip(), '%M:%S').time()
     except:
         img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        img = img.crop((610,32,665,56))
-        skala= 600/100
-        img = img.resize((round(img.size[0]*skala),round(img.size[1]*skala)))
+        img = img.crop((610, 32, 665, 56))
+        skala = 600 / 100
+        img = img.resize((round(img.size[0] * skala), round(img.size[1] * skala)))
         img = img.convert('L')
-        text = pytesseract.image_to_string(img,config=r'--psm 7 -c tessedit_char_whitelist=0123456789:')
+        text = pytesseract.image_to_string(img, config=r'--psm 7 -c tessedit_char_whitelist=0123456789:')
         text = text.strip()
         try:
             text = datetime.strptime(text.strip(), '%M:%S').time()
@@ -857,88 +863,87 @@ def get_time(image):
             text = None
     return text
 
-# gold
 
+# gold
 
 def get_gold_diff_blue(image):
     img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    img_red_basic = img.crop((730,0,770,35))
-    img_blue_basic = img.crop((547,0,590,35))
-    skala= 150/100
-    img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
+    img_red_basic = img.crop((730, 0, 770, 35))
+    img_blue_basic = img.crop((547, 0, 590, 35))
+    skala = 150 / 100
+    img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
     img_red = img_red.convert('L')
-    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
     img_blue = img_blue.convert('L')
-    text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
-    text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+    text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+    text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
     text_red = text_red.strip()
     text_blue = text_blue.strip()
     try:
-        text_red = int(float(text_red[:-1])*1000)
-        if text_red>80000:
-            text_red = int(text_red/10)
+        text_red = int(float(text_red[:-1]) * 1000)
+        if text_red > 80000:
+            text_red = int(text_red / 10)
     except:
-        skala= 600/100
-        img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
+        skala = 600 / 100
+        img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
         img_red = img_red.convert('L')
-        text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+        text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
         text_red = text_red.strip()
         try:
-            text_red = int(float(text_red[:-1])*1000)
-            if text_red>80000:
-                text_red = int(text_red/10)
+            text_red = int(float(text_red[:-1]) * 1000)
+            if text_red > 80000:
+                text_red = int(text_red / 10)
         except:
             text_red = None
     try:
-        text_blue = int(float(text_blue[:-1])*1000)
-        if text_blue>80000:
-            text_blue = int(text_blue/10)
+        text_blue = int(float(text_blue[:-1]) * 1000)
+        if text_blue > 80000:
+            text_blue = int(text_blue / 10)
     except:
-        skala= 600/100
-        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+        skala = 600 / 100
+        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
         img_blue = img_blue.convert('L')
-        text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
+        text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789k.')
         text_blue = text_blue.strip()
         try:
-            text_blue = int(float(text_blue[:-1])*1000)
-            if text_blue>80000:
-                text_blue = int(text_blue/10)
+            text_blue = int(float(text_blue[:-1]) * 1000)
+            if text_blue > 80000:
+                text_blue = int(text_blue / 10)
         except:
             text_blue = None
     try:
-        diff = int(text_blue-text_red)
-        if abs(diff)>=20000:
-            diff = diff/10
+        diff = int(text_blue - text_red)
+        if abs(diff) >= 20000:
+            diff = diff / 10
     except:
         diff = None
     return diff
+
 
 # towers
 
 def get_tower_diff_blue(image):
     try:
         diff = get_tower_blue(image) - get_tower_red(image)
-        if diff>14:
-            diff=None
+        if diff > 14:
+            diff = None
     except:
         diff = None
     return diff
 
+
 # kills
-
-
 def get_kills_diff_blue(image):
     try:
         diff = get_kills_blue(image) - get_kills_red(image)
-        if diff>14:
-            diff=None
+        if diff > 14:
+            diff = None
     except:
         diff = None
     return diff
 
+
 # teams
-
-
 def get_team_blue(image):
     img = image[:20, 417:450]
     resized = resize(img, 130)
@@ -1006,9 +1011,8 @@ def get_team_red(image):
         text = None
     return text
 
+
 # kda
-
-
 def get_kda_diff_top_blue(image):
     try:
         diff = get_kda_top_blue(image) - get_kda_top_red(image)
@@ -1047,6 +1051,7 @@ def get_kda_diff_supp_blue(image):
     except:
         diff = None
     return diff
+
 
 # minions
 
@@ -1109,7 +1114,7 @@ def get_minions_diff_top_blue(image):
         try:
             diff = int(text_blue) - int(text_red)
             if diff > 1000:
-             diff = None
+                diff = None
         except:
             diff = None
     return diff
@@ -1245,26 +1250,26 @@ def get_minions_diff_mid_blue(image):
 
 def get_minions_diff_adc_blue(image):
     img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    img_red_basic = img.crop((680,662,710,680))
-    img_blue_basic = img.crop((575,662,610,680))
-    skala = 120/100
-    img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
-    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+    img_red_basic = img.crop((680, 662, 710, 680))
+    img_blue_basic = img.crop((575, 662, 610, 680))
+    skala = 120 / 100
+    img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
+    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
     img_red = img_red.convert('L')
     img_blue = img_blue.convert('L')
-    text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     text_red = text_red.strip()
-    text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     text_blue = text_blue.strip()
     try:
         text_red = int(text_red)
-        if text_red>400:
+        if text_red > 400:
             raise
     except:
-        skala=150/100
-        img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
+        skala = 150 / 100
+        img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
         img_red = img_red.convert('L')
-        text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_red = text_red.strip()
         try:
             text_red = int(text_red)
@@ -1272,13 +1277,13 @@ def get_minions_diff_adc_blue(image):
             text_red = None
     try:
         text_blue = int(text_blue)
-        if text_blue>400:
+        if text_blue > 400:
             raise
     except:
-        skala=150/100
-        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+        skala = 150 / 100
+        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
         img_blue = img_blue.convert('L')
-        text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_blue = text_blue.strip()
         try:
             text_blue = int(text_blue)
@@ -1289,14 +1294,14 @@ def get_minions_diff_adc_blue(image):
         if diff > 90:
             raise
     except:
-        skala = 600/100
-        img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
-        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+        skala = 600 / 100
+        img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
+        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
         img_red = img_red.convert('L')
         img_blue = img_blue.convert('L')
-        text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_red = text_red.strip()
-        text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_blue = text_blue.strip()
         try:
             diff = int(text_blue) - int(text_red)
@@ -1307,26 +1312,26 @@ def get_minions_diff_adc_blue(image):
 
 def get_minions_diff_supp_blue(image):
     img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    img_red_basic = img.crop((680,691,710,710))
-    img_blue_basic = img.crop((575,691,610,710))
-    skala = 120/100
-    img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
-    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+    img_red_basic = img.crop((680, 691, 710, 710))
+    img_blue_basic = img.crop((575, 691, 610, 710))
+    skala = 120 / 100
+    img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
+    img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
     img_red = img_red.convert('L')
     img_blue = img_blue.convert('L')
-    text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     text_red = text_red.strip()
-    text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+    text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
     text_blue = text_blue.strip()
     try:
         text_red = int(text_red)
-        if text_red>100:
+        if text_red > 100:
             raise
     except:
-        skala=150/100
-        img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
+        skala = 150 / 100
+        img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
         img_red = img_red.convert('L')
-        text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_red = text_red.strip()
         try:
             text_red = int(text_red)
@@ -1334,13 +1339,13 @@ def get_minions_diff_supp_blue(image):
             text_red = None
     try:
         text_blue = int(text_blue)
-        if text_blue>100:
+        if text_blue > 100:
             raise
     except:
-        skala=150/100
-        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+        skala = 150 / 100
+        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
         img_blue = img_blue.convert('L')
-        text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_blue = text_blue.strip()
         try:
             text_blue = int(text_blue)
@@ -1351,34 +1356,35 @@ def get_minions_diff_supp_blue(image):
         if diff > 50:
             raise
     except:
-        skala = 600/100
-        img_red = img_red_basic.resize((round(img_red_basic.size[0]*skala),round(img_red_basic.size[1]*skala)))
-        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0]*skala),round(img_blue_basic.size[1]*skala)))
+        skala = 600 / 100
+        img_red = img_red_basic.resize((round(img_red_basic.size[0] * skala), round(img_red_basic.size[1] * skala)))
+        img_blue = img_blue_basic.resize((round(img_blue_basic.size[0] * skala), round(img_blue_basic.size[1] * skala)))
         img_red = img_red.convert('L')
         img_blue = img_blue.convert('L')
-        text_red = pytesseract.image_to_string(img_red,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_red = pytesseract.image_to_string(img_red, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_red = text_red.strip()
-        text_blue = pytesseract.image_to_string(img_blue,config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
+        text_blue = pytesseract.image_to_string(img_blue, config=r'--psm 7 -c tessedit_char_whitelist=0123456789')
         text_blue = text_blue.strip()
         try:
             diff = int(text_blue) - int(text_red)
         except:
-            diff=None
+            diff = None
     return diff
+
 
 # dragons
 def dragon_detector(frame):
-    dragons=['hextech','infernal','mountain','ocean','wind']
+    dragons = ['hextech', 'infernal', 'mountain', 'ocean', 'wind']
     dragons_counter = {}
-    frame=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    frame_blue = frame[:75,400:650]
-    frame_red = frame[:75,660:900]
-    frame_sites=[frame_blue,frame_red]
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame_blue = frame[:75, 400:650]
+    frame_red = frame[:75, 660:900]
+    frame_sites = [frame_blue, frame_red]
     for dragon in dragons:
         for frame in frame_sites:
-            template=cv2.imread(f'dragons/{dragon}.jpg', cv2.IMREAD_GRAYSCALE)
-            result=cv2.matchTemplate(template, frame, cv2.TM_CCOEFF_NORMED)
-            #set threshold
+            template = cv2.imread(f'dragons/{dragon}.jpg', cv2.IMREAD_GRAYSCALE)
+            result = cv2.matchTemplate(template, frame, cv2.TM_CCOEFF_NORMED)
+            # set threshold
             if dragon == 'infernal':
                 threshold = 0.85
             else:
@@ -1387,8 +1393,8 @@ def dragon_detector(frame):
             locations = np.where(result >= threshold)
             locations = list(zip(*locations[::-1]))
 
-            template_width=template.shape[1]
-            template_height=template.shape[0]
+            template_width = template.shape[1]
+            template_height = template.shape[0]
 
             # Draw a rectangle around each detected object and count them
             count = 0
@@ -1398,17 +1404,18 @@ def dragon_detector(frame):
                 cv2.rectangle(frame, top_left, bottom_right, (0, 0, 255), 2)
                 count += 1
             if np.array_equal(frame, frame_blue):
-                dragons_counter[f'{dragon}_blue']=count
+                dragons_counter[f'{dragon}_blue'] = count
             elif np.array_equal(frame, frame_red):
-                dragons_counter[f'{dragon}_red']=count
-    hextech_dragon_diff=dragons_counter['hextech_blue']-dragons_counter['hextech_red']
-    infernal_dragon_diff=dragons_counter['infernal_blue']-dragons_counter['infernal_red']
-    mountain_dragon_diff=dragons_counter['mountain_blue']-dragons_counter['mountain_red']
-    ocean_dragon_diff=dragons_counter['ocean_blue']-dragons_counter['ocean_red']
-    wind_dragon_diff=dragons_counter['wind_blue']-dragons_counter['wind_red']
-    dragon_diff=[hextech_dragon_diff,infernal_dragon_diff,mountain_dragon_diff,ocean_dragon_diff,
-                 wind_dragon_diff]
+                dragons_counter[f'{dragon}_red'] = count
+    hextech_dragon_diff = dragons_counter['hextech_blue'] - dragons_counter['hextech_red']
+    infernal_dragon_diff = dragons_counter['infernal_blue'] - dragons_counter['infernal_red']
+    mountain_dragon_diff = dragons_counter['mountain_blue'] - dragons_counter['mountain_red']
+    ocean_dragon_diff = dragons_counter['ocean_blue'] - dragons_counter['ocean_red']
+    wind_dragon_diff = dragons_counter['wind_blue'] - dragons_counter['wind_red']
+    dragon_diff = [hextech_dragon_diff, infernal_dragon_diff, mountain_dragon_diff, ocean_dragon_diff,
+                   wind_dragon_diff]
     return dragon_diff
+
 
 # baron
 def baron_detector(frame):
@@ -1445,6 +1452,7 @@ def baron_detector(frame):
 
     return baron_diff
 
+
 # elder
 def elder_detector(frame):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -1480,6 +1488,7 @@ def elder_detector(frame):
 
     return elder_diff
 
+
 # herald
 def herald_detector(frame):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -1513,6 +1522,7 @@ def herald_detector(frame):
     herald_diff = herald_dict['blue'] - herald_dict['red']
 
     return herald_diff
+
 
 # champions
 def champions_recogniser(image, position, site):
@@ -1620,45 +1630,45 @@ def champions_recogniser(image, position, site):
     return champion
 
 
-testujemy= True
+testujemy = True
 
 if testujemy:
     print(f"Czas stratu: {datetime.now().strftime('%H:%M:%S')}")
 
-    czaslista=[]
-    zlotolista=[]
-    wiezelista=[]
-    killelista=[]
-    team_bluelista=[]
-    team_redlista=[]
-    kda_toplista=[]
-    kda_junglelista=[]
-    kda_midlista=[]
-    kda_adclista=[]
-    kda_supplista=[]
-    minions_toplista=[]
-    minions_junglelista=[]
-    minions_midlista=[]
-    minions_adclista=[]
-    minions_supplista=[]
-    hextech_dragonlista=[]
-    infernal_dragonlista=[]
-    mountain_dragonlista=[]
-    ocean_dragonlista=[]
-    wind_dragonlista=[]
-    baronlista=[]
-    elderlista=[]
-    heraldlista=[]
-    champion_red_toplista=[]
-    champion_red_junglelista=[]
-    champion_red_midlista=[]
-    champion_red_adclista=[]
-    champion_red_supplista=[]
-    champion_blue_toplista=[]
-    champion_blue_junglelista=[]
-    champion_blue_midlista=[]
-    champion_blue_adclista=[]
-    champion_blue_supplista=[]
+    czaslista = []
+    zlotolista = []
+    wiezelista = []
+    killelista = []
+    team_bluelista = []
+    team_redlista = []
+    kda_toplista = []
+    kda_junglelista = []
+    kda_midlista = []
+    kda_adclista = []
+    kda_supplista = []
+    minions_toplista = []
+    minions_junglelista = []
+    minions_midlista = []
+    minions_adclista = []
+    minions_supplista = []
+    hextech_dragonlista = []
+    infernal_dragonlista = []
+    mountain_dragonlista = []
+    ocean_dragonlista = []
+    wind_dragonlista = []
+    baronlista = []
+    elderlista = []
+    heraldlista = []
+    champion_red_toplista = []
+    champion_red_junglelista = []
+    champion_red_midlista = []
+    champion_red_adclista = []
+    champion_red_supplista = []
+    champion_blue_toplista = []
+    champion_blue_junglelista = []
+    champion_blue_midlista = []
+    champion_blue_adclista = []
+    champion_blue_supplista = []
 
     for filename in os.listdir('mecze'):
         f = os.path.join('mecze', filename)
@@ -1706,86 +1716,54 @@ if testujemy:
             baronlista.append(baron_detector(frame))
             elderlista.append(elder_detector(frame))
             heraldlista.append(herald_detector(frame))
-            champion_red_toplista.append(champions_recogniser(frame,'top','red'))
-            champion_red_junglelista.append(champions_recogniser(frame,'jungle','red'))
-            champion_red_midlista.append(champions_recogniser(frame,'mid','red'))
-            champion_red_adclista.append(champions_recogniser(frame,'adc','red'))
-            champion_red_supplista.append(champions_recogniser(frame,'supp','red'))
-            champion_blue_toplista.append(champions_recogniser(frame,'top','blue'))
-            champion_blue_junglelista.append(champions_recogniser(frame,'jungle','blue'))
-            champion_blue_midlista.append(champions_recogniser(frame,'mid','blue'))
-            champion_blue_adclista.append(champions_recogniser(frame,'adc','blue'))
-            champion_blue_supplista.append(champions_recogniser(frame,'supp','blue'))
+            champion_red_toplista.append(champions_recogniser(frame, 'top', 'red'))
+            champion_red_junglelista.append(champions_recogniser(frame, 'jungle', 'red'))
+            champion_red_midlista.append(champions_recogniser(frame, 'mid', 'red'))
+            champion_red_adclista.append(champions_recogniser(frame, 'adc', 'red'))
+            champion_red_supplista.append(champions_recogniser(frame, 'supp', 'red'))
+            champion_blue_toplista.append(champions_recogniser(frame, 'top', 'blue'))
+            champion_blue_junglelista.append(champions_recogniser(frame, 'jungle', 'blue'))
+            champion_blue_midlista.append(champions_recogniser(frame, 'mid', 'blue'))
+            champion_blue_adclista.append(champions_recogniser(frame, 'adc', 'blue'))
+            champion_blue_supplista.append(champions_recogniser(frame, 'supp', 'blue'))
 
-    df_data={'time': czaslista,
-             'gold': zlotolista,
-             'towers': wiezelista,
-             'kills': killelista,
-             'blue_team': team_bluelista,
-             'red_team': team_redlista,
-             'kda_top': kda_toplista,
-             'kda_jungle': kda_junglelista,
-             'kda_mid': kda_midlista,
-             'kda_adc': kda_adclista,
-             'kda_supp': kda_supplista,
-             'minions_top': minions_toplista,
-             'minions_jungle': minions_junglelista,
-             'minions_mid': minions_midlista,
-             'minions_adc': minions_adclista,
-             'minions_supp': minions_supplista,
-             'hextech_dragon': hextech_dragonlista,
-             'infernal_dragon': infernal_dragonlista,
-             'mountain_dragon': mountain_dragonlista,
-             'ocean_dragon': ocean_dragonlista,
-             'wind_dragon': wind_dragonlista,
-             'baron': baronlista,
-             'elder': elderlista,
-             'herald': heraldlista,
-             'champion_red_top': champion_red_toplista,
-             'champion_red_jungle': champion_red_junglelista,
-             'champion_red_mid': champion_red_midlista,
-             'champion_red_adc': champion_red_adclista,
-             'champion_red_supp': champion_red_supplista,
-             'champion_blue_top': champion_blue_toplista,
-             'champion_blue_jungle': champion_blue_junglelista,
-             'champion_blue_mid': champion_blue_midlista,
-             'champion_blue_adc': champion_blue_adclista,
-             'champion_blue_supp': champion_blue_supplista
-             }
-
-    df= pd.DataFrame(df_data)
-
-    print(f"Czas końca: {datetime.now().strftime('%H:%M:%S')}")
-    df.to_csv('baza.csv',index=False)
-
-drugitest=False
-if drugitest:
-
-    kda_junglelista = []
-    kda_junglered = []
-    kda_jungleblue = []
-    frame_nr = []
-
-    for filename in os.listdir('mecze'):
-        f = os.path.join('mecze', filename)
-        # checking if it is a file
-        if os.path.isfile(f):
-            frame = cv2.imread(f)
-            kda_jungle = get_kda_diff_jungle_blue(frame)
-            kda_junglelista.append(kda_jungle)
-            kda_jungle_red = get_kda_jungle_red(frame)
-            kda_junglered.append(kda_jungle_red)
-            kda_jungle_blue = get_kda_jungle_blue(frame)
-            kda_jungleblue.append(kda_jungle_blue)
-            frame_nr.append(filename)
-
-    df_data= {
-        'frame':frame_nr,
-        'kda_red':kda_junglered,
-        'kda_blue':kda_jungleblue,
-        'kda_diff':kda_junglelista
-    }
+    df_data = {'time': czaslista,
+               'gold': zlotolista,
+               'towers': wiezelista,
+               'kills': killelista,
+               'blue_team': team_bluelista,
+               'red_team': team_redlista,
+               'kda_top': kda_toplista,
+               'kda_jungle': kda_junglelista,
+               'kda_mid': kda_midlista,
+               'kda_adc': kda_adclista,
+               'kda_supp': kda_supplista,
+               'minions_top': minions_toplista,
+               'minions_jungle': minions_junglelista,
+               'minions_mid': minions_midlista,
+               'minions_adc': minions_adclista,
+               'minions_supp': minions_supplista,
+               'hextech_dragon': hextech_dragonlista,
+               'infernal_dragon': infernal_dragonlista,
+               'mountain_dragon': mountain_dragonlista,
+               'ocean_dragon': ocean_dragonlista,
+               'wind_dragon': wind_dragonlista,
+               'baron': baronlista,
+               'elder': elderlista,
+               'herald': heraldlista,
+               'champion_red_top': champion_red_toplista,
+               'champion_red_jungle': champion_red_junglelista,
+               'champion_red_mid': champion_red_midlista,
+               'champion_red_adc': champion_red_adclista,
+               'champion_red_supp': champion_red_supplista,
+               'champion_blue_top': champion_blue_toplista,
+               'champion_blue_jungle': champion_blue_junglelista,
+               'champion_blue_mid': champion_blue_midlista,
+               'champion_blue_adc': champion_blue_adclista,
+               'champion_blue_supp': champion_blue_supplista
+               }
 
     df = pd.DataFrame(df_data)
-    df.to_csv('test_kda_jungle.csv', index=False)
 
+    print(f"Czas końca: {datetime.now().strftime('%H:%M:%S')}")
+    df.to_csv('baza.csv', index=False)

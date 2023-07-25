@@ -5,12 +5,11 @@ import os
 import cv2
 import numpy as np
 import math
+import youtube_dl
 
 save_path = 'D:/Python/magisterka/filmy'
-#link = 'https://www.youtube.com/watch?v=O7mNMvMT4Cs'
-link2= 'https://www.youtube.com/watch?v=gU0R6i02QOE'
 
-film_list=[
+film_list = [
     'https://www.youtube.com/watch?v=pzEobUPOOBQ',
     'https://www.youtube.com/watch?v=U4RP5sNpBj4',
     'https://www.youtube.com/watch?v=cZmkkdlOfq8&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=22',
@@ -29,21 +28,18 @@ film_list=[
     'https://www.youtube.com/watch?v=dFHKsnDdFHU&list=PLgXqE27bzUFwKQXth0JeyO-gJIYcQ0qH4&index=9'
 ]
 
+
 # POBIERANIE
-def downloader(link,save_path):
+# na chwilę obecną nie działa, ponieważ zmieniła się polityka YT odnośnie pobierania filmów i tych filmów nie da się pobrać
+
+
+def downloader(link, path):
     yt = YouTube(link)
     ys = yt.streams.filter(file_extension="mp4").get_by_itag(22)
     print(f'Start: {datetime.now().strftime("%H:%M:%S")}')
-    ys.download(save_path)
+    ys.download(path)
     print(f'Koniec: {datetime.now().strftime("%H:%M:%S")}')
 
-from pytube import YouTube
-
-from pytube import YouTube
-
-import youtube_dl
-
-import youtube_dl
 
 def download_720p_stream_from_youtube(link, path):
     try:
@@ -57,13 +53,15 @@ def download_720p_stream_from_youtube(link, path):
     except Exception as e:
         print("Wystąpił błąd: ", e)
 
-#for film in film_list:
- #   downloader(film,save_path)
 
-#download_720p_stream_from_youtube(link2,save_path)
+# Wywołanie pobierania filmów w pętli
 
-# ZMIANA NA KLATKI
-def video_to_images(video_path, frames_per_second=0.02,number=1):
+# for film in film_list:
+#   downloader(film,save_path)
+
+
+# ZMIANA FILMU NA KLATKI
+def video_to_images(video_path, frames_per_second=0.02, number=1):
     cam = cv2.VideoCapture(video_path)
     frame_list = []
     frame_rate = cam.get(cv2.CAP_PROP_FPS)  # video frame rate
@@ -87,14 +85,14 @@ def video_to_images(video_path, frames_per_second=0.02,number=1):
         if ret:
 
             # if video is still left continue creating images
-            file_name = f'{images_path}/frame' + str(current_frame) +'_' +str(number)+ '.jpg'
+            file_name = f'{images_path}/frame' + str(current_frame) + '_' + str(number) + '.jpg'
             print('Creating...' + file_name)
             # print('frame rate', frame_rate)
             if current_frame % (math.floor(frame_rate / frames_per_second)) == 0:
-                    # adding frame to list
+                # adding frame to list
                 frame_list.append(frame)
 
-                    # writing selected frames to images_path
+                # writing selected frames to images_path
                 cv2.imwrite(file_name, frame)
 
                 # increasing counter so that it will
@@ -109,25 +107,38 @@ def video_to_images(video_path, frames_per_second=0.02,number=1):
 
     return frame_list
 
-# ZABAWA OBRAZEM
+
+# FUNKCJE DOSTOSOWUJĄCE OBRAZ
 def ocr_core(image):
     text = pytesseract.image_to_string(image)
     return text
+
+
 def get_gray_scale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
 def remove_noise(image):
-    return cv2.medianBlur(image,5)
+    return cv2.medianBlur(image, 5)
+
+
 def thresholding(image):
-    return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
-def resize(image,scale_percent):
+    return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+
+
+def resize(image, scale_percent):
     width = int(image.shape[1] * scale_percent / 100)
     height = int(image.shape[0] * scale_percent / 100)
     dim = (width, height)
     resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
     return resized
+
+
 def show(image):
     cv2.imshow('1', image)
     cv2.waitKey()
+
+
 def unsharp_mask(image, kernel_size=(5, 5), sigma=1.0, amount=1.0, threshold=0):
     """Return a sharpened version of the image, using an unsharp mask."""
     blurred = cv2.GaussianBlur(image, kernel_size, sigma)
@@ -140,25 +151,27 @@ def unsharp_mask(image, kernel_size=(5, 5), sigma=1.0, amount=1.0, threshold=0):
         np.copyto(sharpened, image, where=low_contrast_mask)
     return sharpened
 
-# ATRYBUTY
+
+# FUNKCJA POBIERAJĄCA ZŁOTO DLA DRUŻYNY NIEBIESKIEJ - NA JEJ PODSTAWIE BĘDZIEMY WYBIERALI KLATKI MECZOWE
 def get_gold_blue(image):
     img = image[:35, 550:580]
-    resized = resize(img,130)
+    resized = resize(img, 130)
     gray_scaled = get_gray_scale(resized)
     sharpen = unsharp_mask(gray_scaled)
-    text=ocr_core(sharpen)
-    if len(text)>0:
+    text = ocr_core(sharpen)
+    if len(text) > 0:
         return text
     else:
         return None
 
+
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract'
 
-#test=False
-test=True
-#test='kot'
+# test = False #False - nic nie robi
+test = True  # True - podział na klatki meczowe i niemeczowe
+# test = 'kot' #kot - zmiana filmów na klatki
 
-#Zmienianie filmow na klatki
+# Zmienianie filmow na klatki
 if test == 'kot':
     print(f'Start: {datetime.now().strftime("%H:%M:%S")}')
     i = 0
@@ -166,26 +179,24 @@ if test == 'kot':
         f = os.path.join('filmy', filename)
         # checking if it is a file
         if os.path.isfile(f):
-            video_to_images(f,number=i)
+            video_to_images(f, number=i)
             pass
-        i=i+1
+        i = i + 1
     print(f'Koniec: {datetime.now().strftime("%H:%M:%S")}')
-#Wybieranie filmów których klatki są z meczu
 
-if test==True:
+# Wybieranie filmów których klatki są z meczu
+if test:
     for filename in os.listdir('klatki'):
         f = os.path.join('klatki', filename)
         # checking if it is a file
         if os.path.isfile(f):
             frame = cv2.imread(f)
-            if get_gold_blue(frame)!=None:
-                os.chdir('D:\Python\magisterka\mecze')
+            if get_gold_blue(frame) is not None:
+                os.chdir(r'D:\Python\magisterka\mecze')
                 cv2.imwrite(filename, frame)
-                os.chdir('D:\Python\magisterka')
-            elif get_gold_blue(frame)==None:
+                os.chdir(r'D:\Python\magisterka')
+            elif get_gold_blue(frame) is not None:
                 os.chdir(r'D:\Python\magisterka\niemecze')
                 cv2.imwrite(filename, frame)
-                os.chdir('D:\Python\magisterka')
+                os.chdir(r'D:\Python\magisterka')
             os.remove(f)
-
-
